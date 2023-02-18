@@ -1,12 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  ScrollView
-} from "react-native";
+import { StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity } from "react-native";
+
+import { CheckBox } from "@rneui/themed";
+
 
 /*
   {
@@ -16,13 +13,17 @@ import {
 */
 
 export default function App() {
-  const [tasks, setTasks] = useState([])
-  const [text, setText] = useState("")
+  const [tasks, setTasks] = useState([]);
+  const [text, setText] = useState("");
+
 
   function saveTask() {
-    setTasks(prevState => [...prevState, {task: text, completed: false}])
-    setText("")
-    console.log(tasks)
+    setTasks((prevState) => [...prevState, { task: text, completed: false }]);
+    setText("");
+  }
+
+  function handleCheckBox() {
+
   }
 
   return (
@@ -31,7 +32,7 @@ export default function App() {
         <Text style={styles.headerTitle}>Quebec Todo App</Text>
       </View>
       <View>
-        <TextInput 
+        <TextInput
           placeholder="Enter task"
           style={styles.textInput}
           autoCapitalize
@@ -41,17 +42,18 @@ export default function App() {
           onSubmitEditing={saveTask}
         />
       </View>
-        <ScrollView>
-          {
-            tasks.map((t) => (
-              <View>
-                <Text>{t.task}</Text>
-              </View>
-            ))
-          }
-        </ScrollView>
+      <ScrollView>
+        {tasks.map((t, index) => (
+          <View style={styles.taskContainer} key={(2 * (index) - 1) * (2 * (index + 1) - 1)}>
+            <Text style={styles.taskText}>{t.task}</Text>
+            <TouchableOpacity onPress={handleCheckBox}>
+              <CheckBox checked={t.completed} title="" size={25}/>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </ScrollView>
     </View>
-    );
+  );
 }
 
 const styles = StyleSheet.create({
@@ -66,8 +68,21 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderWidth: 2,
-    marginTop: 10,
+    marginTop: 25,
     padding: 10,
-    borderRadius: 7
+    borderRadius: 7,
+  },
+  taskContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 10,
+    marginTop: 20,
+    marginLeft: 30,
+  },
+  taskText: {
+    fontSize: 16,
+    fontWeight: "bold"
   }
 });
