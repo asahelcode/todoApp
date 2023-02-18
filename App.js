@@ -1,34 +1,73 @@
-import { StatusBar } from 'expo-status-bar';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from './components/Home';
-import Header from './components/Header';
-import Add from './components/Add';
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  ScrollView
+} from "react-native";
 
-const Stack = createNativeStackNavigator();
-
+/*
+  {
+    task: "Buy food",
+    completed: false
+  }
+*/
 
 export default function App() {
+  const [tasks, setTasks] = useState([])
+  const [text, setText] = useState("")
+
+  function saveTask() {
+    setTasks(prevState => [...prevState, {task: text, completed: false}])
+    setText("")
+    console.log(tasks)
+  }
+
   return (
-    <>
-    <Header />
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Add" component={Add} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </>
-  );
+    <View style={styles.container}>
+      <View>
+        <Text style={styles.headerTitle}>Quebec Todo App</Text>
+      </View>
+      <View>
+        <TextInput 
+          placeholder="Enter task"
+          style={styles.textInput}
+          autoCapitalize
+          cursorColor="#000"
+          onChangeText={(text) => setText(text)}
+          value={text}
+          onSubmitEditing={saveTask}
+        />
+      </View>
+        <ScrollView>
+          {
+            tasks.map((t) => (
+              <View>
+                <Text>{t.task}</Text>
+              </View>
+            ))
+          }
+        </ScrollView>
+    </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+  container: {
+    backgroundColor: "#fff",
+    margin: 50,
   },
-  headerText: {
-    fontSize: 35,
+  headerTitle: {
+    fontSize: 30,
+    fontWeight: "bold",
+    textAlign: "center",
   },
+  textInput: {
+    borderWidth: 2,
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 7
+  }
 });
